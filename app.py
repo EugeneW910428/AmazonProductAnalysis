@@ -1,13 +1,13 @@
 
 import streamlit as st
 from utils.preprocessing import preprocess_text
-from utils.model import analyze_sentiment, evaluate_model, train_model
 from utils.sql_queries import init_db, insert_reviews, fetch_reviews_by_asin, fetch_top_positive_asins
 import pandas as pd
 import sqlite3
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
-
+from utils.model import analyze_sentiment, train_model
+import json
 # Initialize database
 init_db()
 
@@ -21,7 +21,8 @@ if page == "Upload & Analyze":
     uploaded_file = st.file_uploader("Upload your Amazon reviews (.jsonl)", type="jsonl")
 
     if uploaded_file:
-        data = pd.DataFrame([eval(line) for line in uploaded_file])
+    
+        data = pd.DataFrame([json.loads(line) for line in uploaded_file])
         asin = st.text_input("Enter Product ASIN:")
 
         if asin:
